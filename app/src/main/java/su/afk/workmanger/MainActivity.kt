@@ -6,7 +6,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import java.time.Duration
 
 class MainActivity : AppCompatActivity() {
     val workManager = WorkManager.getInstance(this)
@@ -19,16 +21,9 @@ class MainActivity : AppCompatActivity() {
 
         val button = findViewById<Button>(R.id.button)
         button.setOnClickListener {
-            val downloadImageWorker = OneTimeWorkRequest.from(DownloadImageWorker::class.java)
-            val applyFilterWorker = OneTimeWorkRequest.from(ApplyFilterWorker::class.java)
-            val saveImageWorker = OneTimeWorkRequest.from(SaveImageWorker::class.java)
-
-            workManager
-//                .beginWith(downloadImageWorker) // последовательное выполнение но если кликнуть нескольк раз они будут выполнятся все вместе
-                .beginUniqueWork("image", ExistingWorkPolicy.KEEP, downloadImageWorker) // применяем политику при повторном клике по заданию workManager
-                .then(applyFilterWorker)
-                .then(saveImageWorker)
-                .enqueue() // ставим цепочку запросов в очередь
+            val downloadImageWorkRequest = PeriodicWorkRequestBuilder<DownloadImageWorker>( // переодическое выполнение
+                Duration.ofHours(12) // минимум раз в 15 минут
+            ) // можно использовать для синхронизации данных
         }
     }
 
