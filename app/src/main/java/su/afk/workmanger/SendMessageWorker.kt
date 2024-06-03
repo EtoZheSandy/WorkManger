@@ -2,6 +2,7 @@ package su.afk.workmanger
 
 import android.app.Notification
 import android.content.Context
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
@@ -22,7 +23,7 @@ class SendMessageWorker(
         setProgress(workDataOf("loading" to true))
         setForeground(getForegroundInfo()) // благодаря Foreground наш Worker продолжит работу даже при закрытие приложения и уничтожения activity
         delay(5000)
-        println("send.... workmanager: $messageText")
+        Log.d("TAG", "send.... workmanager: $messageText")
         setProgress(workDataOf("loading" to false))
         return Result.success()
     }
