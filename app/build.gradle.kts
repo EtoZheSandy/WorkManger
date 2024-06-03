@@ -41,6 +41,8 @@ dependencies {
     // Kotlin + coroutines
     implementation("androidx.work:work-runtime-ktx:2.9.0")
 
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.7")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

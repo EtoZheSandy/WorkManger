@@ -7,20 +7,23 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import kotlinx.coroutines.delay
 
 
 //class SendMessageWorker: Worker() {
 class SendMessageWorker(
     private val appContext: Context,
-    workerParameters: WorkerParameters
+    private val workerParameters: WorkerParameters
 ): CoroutineWorker(appContext = appContext, params = workerParameters) {
+
     override suspend fun doWork(): Result {
-        // благодаря Foreground наш Worker продолжит работу даже при закрытие приложения
-        // и уничтожения activity
-        setForeground(getForegroundInfo())
+        val messageText = workerParameters.inputData.getString("message") ?: "Message is null"
+        setProgress(workDataOf("loading" to true))
+        setForeground(getForegroundInfo()) // благодаря Foreground наш Worker продолжит работу даже при закрытие приложения и уничтожения activity
         delay(5000)
-        println("send.... workmanager")
+        println("send.... workmanager: $messageText")
+        setProgress(workDataOf("loading" to false))
         return Result.success()
     }
 
